@@ -26,66 +26,120 @@ async function askQuestion() {
             type: "list",
             name: "operator",
             message: chalk.cyanBright("which operation you want to perform? \n"),
-            choices: ["Addition", "Subtraction", "Multiplication", "Division"]
+            choices: ["Addition", "Subtraction", "Multiplication", "Division", "Exponentiation", "Modulus", "BMI"],
         },
     ]);
-    let num1;
-    let num2;
-    // Validation loop for the first number
-    do {
-        let { firstNumber } = await inquirer.prompt([
-            {
-                type: 'input',
-                name: 'firstNumber',
-                message: 'Enter first number:',
-                validate: (value) => {
-                    if (!isNaN(Number(value))) {
-                        return true;
-                    }
-                    return chalk.red('Please enter a valid number.');
+    if (ans.operator != "BMI") {
+        let num1;
+        let num2;
+        // Validation loop for the first number
+        do {
+            let { firstNumber } = await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'firstNumber',
+                    message: 'Enter first number:',
+                    validate: (value) => {
+                        if (!isNaN(Number(value))) {
+                            return true;
+                        }
+                        return chalk.red('Please enter a valid number.');
+                    },
                 },
-            },
-        ]);
-        num1 = parseFloat(firstNumber);
-        if (isNaN(num1)) {
-            console.log(chalk.red('Error! Please enter a number.'));
-        }
-    } while (isNaN(num1));
-    // Validation loop for the second number
-    do {
-        let { secondNumber } = await inquirer.prompt([
-            {
-                type: 'input',
-                name: 'secondNumber',
-                message: 'Enter second number:',
-                validate: (value) => {
-                    if (!isNaN(Number(value))) {
-                        return true;
-                    }
-                    return chalk.red('Please enter a valid number.');
+            ]);
+            num1 = parseFloat(firstNumber);
+            if (isNaN(num1)) {
+                console.log(chalk.red('Error! Please enter a number.'));
+            }
+        } while (isNaN(num1));
+        // Validation loop for the second number
+        do {
+            let { secondNumber } = await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'secondNumber',
+                    message: 'Enter second number:',
+                    validate: (value) => {
+                        if (!isNaN(Number(value))) {
+                            return true;
+                        }
+                        return chalk.red('Please enter a valid number.');
+                    },
                 },
-            },
-        ]);
-        num2 = parseFloat(secondNumber);
-        if (isNaN(num2)) {
-            console.log(chalk.red('Error! Please enter a number.'));
+            ]);
+            num2 = parseFloat(secondNumber);
+            if (isNaN(num2)) {
+                console.log(chalk.red('Error! Please enter a number.'));
+            }
+        } while (isNaN(num2));
+        if (ans.operator == "Addition") {
+            console.log(chalk.green(`\t${num1} + ${num2} = ${num1 + num2}`));
         }
-    } while (isNaN(num2));
-    if (ans.operator == "Addition") {
-        console.log(chalk.green(`\t${num1} + ${num2} = ${num1 + num2}`));
-    }
-    else if (ans.operator == "Subtraction") {
-        console.log(chalk.green(`\t${num1} - ${num2} = ${num1 - num2}`));
-    }
-    else if (ans.operator == "Multiplication") {
-        console.log(chalk.green(`\t${num1} * ${num2} = ${num1 * num2}`));
-    }
-    else if (ans.operator == "Division") {
-        if (num2 === 0) {
-            console.log(chalk.red('Divide by zero is not possible.'));
+        else if (ans.operator == "Subtraction") {
+            console.log(chalk.green(`\t${num1} - ${num2} = ${num1 - num2}`));
         }
-        else {
-            console.log(chalk.green(`\t${num1} / ${num2} = ${num1 / num2}`));
+        else if (ans.operator == "Multiplication") {
+            console.log(chalk.green(`\t${num1} * ${num2} = ${num1 * num2}`));
+        }
+        else if (ans.operator == "Division") {
+            if (num2 === 0) {
+                console.log(chalk.red('Divide by zero is not possible.'));
+            }
+            else {
+                console.log(chalk.green(`\t${num1} / ${num2} = ${num1 / num2}`));
+            }
+        }
+        else if (ans.operator === "Exponentiation") {
+            console.log(chalk.green(`\t${num1} ** ${num2} = ${num1 ** num2}`));
+        }
+        else if (ans.operator === "Modulus") {
+            console.log(chalk.green(`\t${num1} % ${num2} = ${num1 % num2}`));
+        }
+    }
+    else {
+        if (ans.operator === "BMI") {
+            let wgt;
+            let hgt;
+            do {
+                let { weightInKg } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'weightInKg',
+                        message: 'Enter Your Weight in Kg: ',
+                        validate: (value) => {
+                            if (!isNaN(Number(value))) {
+                                return true;
+                            }
+                            return chalk.red('Please enter a valid number.');
+                        },
+                    },
+                ]);
+                wgt = parseFloat(weightInKg);
+                if (isNaN(wgt)) {
+                    console.log(chalk.red('Error! Please enter a number.\n'));
+                }
+            } while (isNaN(wgt));
+            do {
+                let { heightInMeters } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'heightInMeters',
+                        message: 'Enter Your Height in Meters: ',
+                        validate: (value) => {
+                            if (!isNaN(Number(value))) {
+                                return true;
+                            }
+                            return chalk.red('Please enter a valid number.');
+                        },
+                    },
+                ]);
+                hgt = parseFloat(heightInMeters);
+                if (isNaN(hgt)) {
+                    console.log(chalk.red('Error! Please enter a number.\n'));
+                }
+            } while (isNaN(hgt));
+            let BMIANS = wgt / (hgt * hgt);
+            console.log(chalk.green(`\tYour BMI is: ${BMIANS}`));
         }
     }
 }
